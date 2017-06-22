@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using CheeseMVC.Data;
-using CheeseMVC.Models;
 
 namespace CheeseMVC.Migrations
 {
     [DbContext(typeof(CheeseDbContext))]
-    [Migration("20170622045845_AddCategory")]
-    partial class AddCategory
+    [Migration("20170622072420_Category")]
+    partial class Category
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,13 +22,15 @@ namespace CheeseMVC.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CategoryID");
+
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("Type");
-
                     b.HasKey("ID");
+
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Cheeses");
                 });
@@ -44,6 +45,14 @@ namespace CheeseMVC.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("CheeseMVC.Models.Cheese", b =>
+                {
+                    b.HasOne("CheeseMVC.Models.CheeseCategory", "Category")
+                        .WithMany("Cheeses")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }
